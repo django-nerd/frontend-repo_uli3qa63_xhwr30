@@ -9,6 +9,11 @@ const products = [
   { id: 6, name: 'Track Pants', price: '$95', img: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=1640&auto=format&fit=crop' },
 ]
 
+const cardVariants = {
+  initial: { opacity: 0, y: 24 },
+  enter: i => ({ opacity: 1, y: 0, transition: { delay: i * 0.06, duration: 0.5 } })
+}
+
 export default function Collection() {
   return (
     <section id="collection" className="bg-black text-white py-24">
@@ -22,16 +27,35 @@ export default function Collection() {
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((p, idx) => (
-            <motion.div key={p.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.05 }} className="group">
+            <motion.div
+              custom={idx}
+              variants={cardVariants}
+              initial="initial"
+              whileInView="enter"
+              viewport={{ once: true, margin: '-100px' }}
+              key={p.id}
+              className="group relative"
+            >
               <div className="aspect-[3/4] w-full overflow-hidden rounded-3xl border border-white/10 bg-white/5">
-                <img src={p.img} alt={p.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+                <motion.img
+                  whileHover={{ scale: 1.06 }}
+                  transition={{ duration: 0.5 }}
+                  src={p.img}
+                  alt={p.name}
+                  className="h-full w-full object-cover"
+                />
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  whileHover={{ opacity: 1 }}
+                  className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"
+                />
               </div>
               <div className="flex items-center justify-between mt-3">
                 <div>
                   <h3 className="font-semibold">{p.name}</h3>
                   <p className="text-white/60 text-sm">{p.price}</p>
                 </div>
-                <button className="rounded-full border border-white/20 px-4 py-2 text-sm hover:bg-white/10">Add</button>
+                <motion.button whileTap={{ scale: 0.95 }} className="rounded-full border border-white/20 px-4 py-2 text-sm hover:bg-white/10">Add</motion.button>
               </div>
             </motion.div>
           ))}
